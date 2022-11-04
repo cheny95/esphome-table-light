@@ -1,0 +1,67 @@
+substitutions:
+  device_name: "Table Light"
+  device_name_low: "table-light"
+  comment: "Table"
+  version: "1.0.0"
+  
+esphome:
+  platform: ESP8266
+  board: d1_mini
+  name: "${device_name_low}"
+  project:
+    name: "table.light_controller"
+    version: "${version}"
+  on_boot:
+  # 开机启动，自检
+    then:
+      - delay: 3s
+      - switch.turn_on:
+          id: table_light
+      - delay: 5s
+      - switch.turn_on:
+          id: table_light
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# 你的 OTA 密码
+ota:
+  password: "12345678"
+
+# 你的 WIFI 信号
+# 你的 WIFI 密码
+wifi:
+  ssid: undefined
+  password: "chan1234"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${device_name_low}"
+    password: "12345678"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+switch:
+  - platform: gpio
+    pin: D1
+    id: table_light
+    name: "table-light-switch"
+    icon: "mdi:desk-lamp"
+    on_turn_on:
+    - delay: 100ms
+    - switch.turn_off: table_light
+
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D5
+    name: "light_status"
+    device_class: "power"
+  
